@@ -1,9 +1,20 @@
 # main game class !
 import tkinter as tk
 from game import game
+import time
 
-# word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music',  'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor ']
-# word = game("Code")
+word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music',  'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor ']
+word = game("Code")
+
+
+
+
+
+printText = game.getDefinition(word)
+# printText = "word"
+
+
+    
 
 def check_answer():
     """Checks the entered answer and provides feedback."""
@@ -29,11 +40,11 @@ root.title("Word Puzzle")
 # Difficulty and time label
 difficulty_label = tk.Label(root, text="Difficulty: easy")
 difficulty_label.grid(row=0, column=0, sticky="w")
-time_label = tk.Label(root, text="1:32")#waiting for logic team to implement time
+time_label = tk.Label(root, text=clock_time)#waiting for logic team to implement time
 time_label.grid(row=0, column=2, sticky="e")
 
 # Puzzle text (with blank spaces represented by underscores)
-puzzle_text = """a ______ medium of exchange ______ of ______ and ______ collectively."""
+puzzle_text = printText
 puzzle_label = tk.Label(root, text=puzzle_text, font=("Arial", 14))
 puzzle_label.grid(row=1, column=0, columnspan=3, pady=20)
 
@@ -49,7 +60,7 @@ entry.bind("<KeyPress>", shortcut)
 entry.pack(pady=10)
 
 check_button = tk.Button(input_frame, text="Check", command=check_answer)
-check_button.pack(ady=10)
+check_button.pack(pady=10)
 
 # Hint and guesses area
 hint_frame = tk.Frame(root)
