@@ -154,28 +154,11 @@ time_label = ctk.CTkLabel(root)  # Timer label removed (text = )
 time_label.grid(row=0, column=2, sticky="e")
 
 
-
-def createCipher(word, parent, color="red"):
-    original_text = word.getCipherDefinition()
-    originalWords = original_text.split()
-    cipherWords = word.getCipher()
-    
-    # fullText = ""
-    # for i, word in enumerate(cipherWords):
-    #     # Check if the word in cipherWords matches the word in originalWords at the same position
-    #     if i < len(originalWords) and word == originalWords[i]:
-    #         label_color = "green"  # Correct word, show in white
-    #     else:
-    #         label_color = color  # Incorrect word, show in the given color (red)
-        
-    #     fullText += f"{word}"
-
-    # Create and pack the label
-    lbl = ctk.CTkLabel(parent, text=fullText, font=("Arial", 16), text_color=label_color)
-    lbl.pack(side="left", padx=5)
-
-puzzle_label=createCipher(word, root, color="red")
-
+# Create and pack the label
+puzzle_text = word.getCipherDefinition()
+print(puzzle_text)
+puzzle_label = ctk.CTkLabel(root, text=puzzle_text, font=("Arial", 14), wraplength=1100, justify="center", anchor="center", text_color="")
+puzzle_label.grid(row=1, column=0, columnspan=3, pady=20)
 
 # Input area
 input_frame = ctk.CTkFrame(root)
@@ -212,12 +195,6 @@ hint_label.pack()
 
 # Start the countdown timer (e.g., 10 seconds)
 updateTime(5)
-
-# Closing confirmation
-def on_closing():
-    if messagebox.askyesno(title = 'Quit??', message = 'Do you really want to quit?'):
-        root.destroy()
-root.protocol("WM_DETELE_WINDOW", on_closing)
 
 
 def restart_game(game_over_window):

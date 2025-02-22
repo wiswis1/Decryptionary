@@ -62,7 +62,6 @@ class Game:
     def setCipherDefinition(self, definition, shift):
         definition = str(definition)
         listDef = definition.split()
-        listCipher = {}
         alpha = "abcdefghijklmnopqrstuvwxyz"
 
         for i in range(len(listDef)) :
@@ -85,8 +84,7 @@ class Game:
                         if (alpha[l].lower() == listDef[i][k].lower()):
                            # shift the letter by the predefined shift 
                            cipheredWord += alpha[l - shift]
-                listDef[i] = cipheredWord
-                listCipher.add(cipheredWord)
+                listDef[i] = "[" + cipheredWord + "]"
             # check synonyms
             for j in range(len(self.synonyms)) :
                 if listDef[i].lower() == self.synonyms[j].lower():
@@ -99,7 +97,7 @@ class Game:
                                 if (alpha[l].lower() == listDef[i][k].lower()):
                                     # shift the letter by the predefined shift 
                                         cipheredWord += alpha[l - shift]
-                    listDef[i] = cipheredWord
+                    listDef[i] = "[" + cipheredWord + "]"
             # re add the periods and commas yeah
             if hasPeriod:
                 listDef[i] += "."
@@ -109,7 +107,7 @@ class Game:
         # unsplit listDef yeah        
         output = " ".join(listDef)
         # print(output)
-        return (output, listCipher)
+        return (output)
         
 
     def __init__(self, word, level):
@@ -117,8 +115,7 @@ class Game:
         self.synonyms = self.setSynonyms(word)
         self.definition = self.setDefinition(word)
         self.shift = random.randint(1, 13)
-        self.cipherDefinition = self.setCipherDefinition(self.definition, self.shift)[0]
-        self.cipherList = self.setCipherDefinition(self.definition, self.shift)[1]
+        self.cipherDefinition = self.setCipherDefinition(self.definition, self.shift)
         self.guess = 0
         self.diff = self.setDiff(level)
         
