@@ -1,16 +1,13 @@
 # main game class !
 import tkinter as tk
-from game import game
+import game 
 import time
 
 word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music',  'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor ']
-word = game("Code")
+word = game.Game("Code")
 
+printText = word.getCipherDefinition()
 
-
-
-
-printText = game.getDefinition(word)
 # printText = "word"
 
 
@@ -40,7 +37,7 @@ root.title("Word Puzzle")
 # Difficulty and time label
 difficulty_label = tk.Label(root, text="Difficulty: easy")
 difficulty_label.grid(row=0, column=0, sticky="w")
-time_label = tk.Label(root, text=clock_time)#waiting for logic team to implement time
+time_label = tk.Label(root, text="clock_time")#waiting for logic team to implement time
 time_label.grid(row=0, column=2, sticky="e")
 
 # Puzzle text (with blank spaces represented by underscores)
