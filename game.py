@@ -1,7 +1,6 @@
-from PyMultiDictionary import MultiDictionary
+from PyMultiDictionary import MultiDictionary, DICT_SYNONYMCOM
 import random
-import time
-import threading
+
 
 # main game class !
 class Game:
@@ -10,25 +9,26 @@ class Game:
     dictionary = MultiDictionary()
     dictionary.set_words_lang('en')
 
-   
 
     # global return methods
     def getWord(self): 
-        print(f"This is the word: {self.word}\n")
+        # print(f"This is the word: {self.word}\n")
         return self.word
     def getDefinition(self): 
-        print(f"This is the definition: {self.definition}\n")
+        # print(f"This is the definition: {self.definition}\n")
         return self.definition
     def getSynonyms(self): 
-        print(f"synonyms: {self.synonyms}\n")
+        # print(f"synonyms: {self.synonyms}\n")
         return self.synonyms
     def getCipherDefinition(self): 
-        print(f"cipher definition: {self.cipherDefinition}\n")
+        # print(f"cipher definition: {self.cipherDefinition}\n")
         return self.cipherDefinition
+    def getGuessNum(self):
+        return self.guessNum
    
     # set the synonyms of a word
     def setSynonyms(self, word): 
-        self.synonyms = dictionary.synonym('en', word) 
+        self.synonyms = dictionary.synonym('en', word , DICT_SYNONYMCOM) 
         return self.synonyms
     
  # set the definition of a word       
@@ -36,14 +36,18 @@ class Game:
         definition = dictionary.meaning('en', word)
         definition = definition[1]
         return definition
-
+    
+    def setGuesses(self,level):
+        if level == 'Easy':
+            guesses = 8
+        elif level == "Medium":
+            guesses = 5
+        else:
+            guesses = 3
+        return guesses
+    
 # set the cipher of a definition
     def setCipherDefinition(self, definition, shift):
-
-        # ANSI colour codes
-        RED = "\033[0;31m"
-        GREEN = "\033[0;32m"
-        END = "\033[0m"
 
         definition = str(definition)
         print(definition)
@@ -71,9 +75,7 @@ class Game:
                         if (alpha[l].lower() == listDef[i][k].lower()):
                            # shift the letter by the predefined shift 
                            cipheredWord += alpha[l - shift]
-                print(listDef[i])
-                listDef[i] = cipheredWord
-                print(listDef[i])
+                listDef[i] = cipheredWord # TAG AS GREEN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             # check synonyms
             for j in range(len(self.synonyms)) :
                 if listDef[i].lower() == self.synonyms[j].lower():
@@ -86,9 +88,8 @@ class Game:
                                 if (alpha[l].lower() == listDef[i][k].lower()):
                                     # shift the letter by the predefined shift 
                                         cipheredWord += alpha[l - shift]
-                    print(listDef[i])
-                    listDef[i] = cipheredWord
-                    print(listDef[i])
+                    listDef[i] = cipheredWord # TAG AS GREEN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            # re add the periods and commas yeah
             if hasPeriod:
                 listDef[i] += "."
             if hasComma:
@@ -101,49 +102,50 @@ class Game:
         return output
         
 
-    def __init__(self, word):
-        self.done = False
+    def __init__(self, word, level):
         self.word = word.lower()
         self.synonyms = self.setSynonyms(word)
         self.definition = self.setDefinition(word)
         self.shift = random.randint(1, 13)
         self.cipherDefinition = self.setCipherDefinition(self.definition, self.shift)
+        self.guessNum = self.setGuesses(level)
 
+    # def startGame(self):
+    #     threading.Thread(target=self.gamePlay, daemon=True).start()
+    #     self.gameTimer()
+    #     self.done = False
 
-    def startGame(self):
-        threading.Thread(target=self.gamePlay, daemon=True).start()
-        self.gameTimer()
-        self.done = False
+    # def gameTimer(self):
+    #     my_time = 60 
+    #     for x in range(my_time, 0, -1):
+    #         if self.done:
+    #             break
+    #         seconds = x % 60
+    #         minutes = int (x / 60)% 60
+    #         print(f"{minutes:02}:{seconds:02}")
+    #         time.sleep(1)
 
-    def gameTimer(self):
-        my_time = 60 
-        for x in range(my_time, 0, -1):
-            if self.done:
-                break
-            seconds = x % 60
-            minutes = int (x / 60)% 60
-            print(f"{minutes:02}:{seconds:02}")
-            time.sleep(1)
-
-    def gamePlay(self):
-        guesses = 10
-        print("Welcome to Decryptionary!")
-        while (guesses < 10 and not self.done):
-            ans = str(input("Enter your guess: "))
-            if (self.word.lower() == ans.lower()):
-                    flag = True
-                    break
-            else:
-                flag = False
-                print("Wrong! Try again")
-                print()
-                guesses -= 1
-        if (flag):
-            print("Congrats for guessing the word")
-            self.done = True
-            return flag
-        else :
-            print("You lost! Try again!")
-            return flag
+    # def gamePlay(self):
+    #     playing = True
+    #     while(playing):
+    #         self.guessNum = 10
+    #         print("Welcome to Decryptionary!")
+    #         while (guesses < 10 and not self.done):
+    #             ans = str(input("Enter your guess: "))
+    #             if (self.word.lower() == ans.lower()):
+    #                     flag = True
+    #                     break
+    #             else:
+    #                 flag = False
+    #                 print("Wrong! Try again")
+    #                 print()
+    #                 guesses -= 1
+    #         if (flag):
+    #             print("Congrats for guessing the word")
+    #             self.done = True
+    #             return flag
+    #         else :
+    #             print("You lost! Try again!")
+    #             return flag
 
     

@@ -1,15 +1,14 @@
-import tkinter as tk
 from tkinter import messagebox
+from tkinter import *
+import customtkinter as ctk
 import game 
 import random
-# import customtkinter
+
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("green")
 
 word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music', 'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor']
-word = game.Game('Code')
-
-printText = word.getCipherDefinition()
-
-import tkinter as tk
+word = game.Game("Money","Hard")
 
 def center_window(root, width=400, height=300):
     # Get the screen width and height
@@ -23,37 +22,48 @@ def center_window(root, width=400, height=300):
     # Set the geometry of the window
     root.geometry(f"{width}x{height}+{x}+{y}")
 
-
-
-
-
-
+    def disable_movement():
+        root.geometry(f"{width}x{height}+{x}+{y}")
+    root.bind("<Configure>", lambda event: disable_movement())
 
 
 # Function to update the countdown timer
 def updateTime(time_left):
-    if time_left > 0:
-        time_label.config(text=f"Time Left: {time_left}s")
+    if time_left >= 0:
+        time_label.configure(text=f"Time Left: {time_left}s")
         root.after(1000, updateTime, time_left - 1)  # Call itself after 1 sec
-    elif (time_left == 0):
-        
-        # end_game_mess = tk.Toplevel(end_game_mess)  # Create a new window
-        # game_over_window.overrideredirect(True)
-        # game_over_window.attributes("-topmost", True)
-        # game_over_window.resizable(False, False)
-        # game_over_window.title("Game Over")
-        # tk.Label(game_over_window, text="Game Over", font=("Arial", 16)).pack(pady=10)
-        # #game_over_window.transient(root) #tried this to stop overlay from moving(didn't work)
-        # game_over_window.grab_set()
-        end_game_mess = tk.Label(root, text = "Game over", font = ("Arial", 35))
-        end_game_mess.place(x=(width - mess_width) // 2, y=(height - mess_height) // 2, width=mess_width, height=mess_height)
-        # end_game_mess.place(x=, y = , height = , width = 300)
-        root.after(5000, root.quit)  # Clo
-        
     else:
-        time_label.config(text="Game Over")  # Display game over message
+        game_over_window = ctk.CTkToplevel(root)
+        game_over_window.title("Game Over")
+        game_over_window.overrideredirect(True)
+        game_over_window.attributes("-topmost", True)
+        game_over_window.resizable(False, False)
+
+
+        popup_width = 400
+        popup_height = 200
+
+        center_window(game_over_window, popup_width, popup_height)
+
+        game_over_label = ctk.CTkLabel(game_over_window, text="Game Over", font=("Arial", 16), text_color="red")
+        game_over_label.pack(expand=True, pady=20)
+            
+
+        try_again_button = ctk.CTkButton(game_over_window, text="Try again", command=game.Game("Hack"))
+        try_again_button.pack(pady=10)
         
-        # root.destroy()
+        quit_button =ctk.CTkButton(game_over_window, text = "Close", command=root.destroy)
+        quit_button.pack(pady=10)
+
+        game_over_window.grab_set()
+
+        
+
+
+def get_hint():
+    """Updates the hint label with a new random hint."""
+    hint_label.configure(text=show_hint())
+
 
 def check_answer():
     """Checks the entered answer and provides feedback."""
@@ -68,57 +78,62 @@ def shortcut(event):
         check_answer()
 
 def show_hint():
-    """Displays a hint (replace with your actual hint logic)."""
-    hint_text = "It's what you use to buy things."  
-    hint_label.config(text=hint_text)  
+    "Fetches a random hint from the word's synonyms."
+    synonyms = word.getSynonyms()
+    if synonyms:  # Ensure there are synonyms available
+        return random.choice(synonyms)  
 
 # Create the main window
-root = tk.Tk()
-root.geometry("1100x500")
+root = ctk.CTk()
+# root.geometry("1000x500")
 root.title("Word Puzzle")
 center_window(root, 1100, 500)
 # Difficulty and time label
-difficulty_label = tk.Label(root, text="Difficulty: easy")
+difficulty_label = ctk.CTkLabel(root, text="Difficulty: easy")
 difficulty_label.grid(row=0, column=0, sticky="w")
 
-time_label = tk.Label(root, text="Time Left: 10s")  # Timer label
+time_label = ctk.CTkLabel(root, text="Time Left: 10s")  # Timer label
 time_label.grid(row=0, column=2, sticky="e")
 
 # Puzzle text
+printText = word.getCipherDefinition()
 puzzle_text = printText
-puzzle_label = tk.Label(root, text=puzzle_text, font=("Arial", 14), wraplength=1000, justify="center", anchor="center")
+puzzle_label = ctk.CTkLabel(root, text=puzzle_text, font=("Arial", 14), wraplength=1100, justify="center", anchor="center")
 puzzle_label.grid(row=1, column=0, columnspan=3, pady=20)
 
+
+
 # Input area
-input_frame = tk.Frame(root, borderwidth=2, relief="groove")
+input_frame = ctk.CTkFrame(root)
 input_frame.grid(row=2, column=0, columnspan=3, padx=20, pady=20)
 
-enter_label = tk.Label(input_frame, text="Enter word here", font=("Arial", 12), justify="center", anchor="center")
+enter_label = ctk.CTkLabel(input_frame, text="Enter word here", font=("Arial", 12), justify="center", anchor="center")
 enter_label.pack(pady=10)
 
-entry = tk.Entry(input_frame, font=("Arial", 12))
+entry = ctk.CTkEntry(input_frame, font=("Arial", 12))
 entry.bind("<KeyPress>", shortcut)
 entry.pack(pady=10)
 
-check_button = tk.Button(input_frame, text="Check", command=check_answer)
+check_button = ctk.CTkButton(input_frame, text="Check", command=check_answer)
 check_button.pack(pady=10)
 
 # Hint and guesses area
-hint_frame = tk.Frame(root)
+hint_frame = ctk.CTkFrame(root)
 hint_frame.grid(row=3, column=2, sticky="ne", padx=20, pady=10)
 
-hint_button = tk.Button(hint_frame, text="Hint?", command=show_hint)
+hint_button = ctk.CTkButton(hint_frame, text="Hint?", command=get_hint)
 hint_button.pack()
 
-guess_label = tk.Label(hint_frame, text="Guesses: ")
-guess_label.pack()
+# text = f"Guesses left: \n {word.getGuessNum()}"
+# guess_label = ctk.CTkLabel(hint_frame, text="Guesses: \n")
+# guess_label.pack()
 
 # Result label
-result_label = tk.Label(root, text="", font=("Arial", 12, "bold"))
+result_label = ctk.CTkLabel(root, text="", font=("Arial", 12, "bold"))
 result_label.grid(row=4, column=0, columnspan=3, pady=10)
 
 # Hint display label
-hint_label = tk.Label(hint_frame, text="")
+hint_label = ctk.CTkLabel(hint_frame, text="")
 hint_label.pack()
 
 # Start the countdown timer (e.g., 10 seconds)
