@@ -9,9 +9,13 @@ printText = word.getCipherDefinition()
 
 # Function to update the countdown timer
 def updateScore(time_left):
-    if time_left >= 0:
+    if time_left > 0:
         time_label.config(text=f"Time Left: {time_left}s")
         root.after(1000, updateScore, time_left - 1)  # Call itself after 1 sec
+    elif (time_left == 0):
+        win = tk.Tk()    
+        win.geometry("250x250")
+        win.Label(win,text = 'GAME OVER').pack
     else:
         time_label.config(text="Game Over")  # Display game over message
         game.time.sleep(5)
