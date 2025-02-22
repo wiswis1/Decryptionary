@@ -117,7 +117,7 @@ def show_hint():
 # Create the main window
 
 # root.geometry("1000x500")
-root.title("Word Puzzle")
+root.title("Decryptionary")
 center_window(root, 1100, 500)
 # Difficulty and time label
 diffText = f"Difficulty: {level}"
