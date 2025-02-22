@@ -10,6 +10,7 @@ class Game:
     dictionary = MultiDictionary()
     dictionary.set_words_lang('en')
 
+   
 
     # global return methods
     def getWord(self): 
@@ -38,16 +39,29 @@ class Game:
 
 # set the cipher of a definition
     def setCipherDefinition(self, definition, shift):
+
+        # ANSI colour codes
+        RED = "\033[0;31m"
+        GREEN = "\033[0;32m"
+        END = "\033[0m"
+
         definition = str(definition)
-        definition = definition.replace(".|\\,", " ")
         print(definition)
-        periodIndex = definition.index(".")
         listDef = definition.split()
         alpha = "abcdefghijklmnopqrstuvwxyz"
         print(listDef)
 
         # loopin' time baby
         for i in range(len(listDef)) :
+            # checkin' for periods and commas
+            hasPeriod = False
+            hasComma = False
+            if "." in listDef[i]:
+                hasPeriod = True
+                listDef[i] = listDef[i].replace(".", "")
+            if "," in listDef[i]:
+                hasComma = True                
+                listDef[i] = listDef[i].replace(",", "")
             if listDef[i].lower() == self.word.lower() :
                 cipheredWord = ""
                 # for all letters in listDef[i]
@@ -55,7 +69,7 @@ class Game:
                    # for all letters in the alphabet
                    for l in range(len(alpha)):
                        # if the current letter matches this letter of the alphabet   
-                        if (alpha[l] == listDef[i][k]):
+                        if (alpha[l] == listDef[i][k].lower):
                            # shift the letter by the predefined shift 
                            cipheredWord += alpha[l - shift]
                 listDef[i] = cipheredWord
@@ -74,26 +88,21 @@ class Game:
                     print(listDef[i])
                     listDef[i] = cipheredWord
                     print(listDef[i])
+            if hasPeriod:
+                listDef[i] += "."
+            if hasComma:
+                listDef[i] += ","
 
         print(listDef)
         # unsplit listDef yeah        
         output = " ".join(listDef)
-        temp = ""
-        for i in range(len(listDef) + 1):
-            if (i < periodIndex):  
-                temp += output[i]
-            elif (i == periodIndex) :
-                temp += "."
-            else :
-                temp += output[i -1]
-        output = temp
         print(output)
         return output
         
 
     def __init__(self, word):
         self.done = False
-        self.word = word
+        self.word = word.lower()
         self.synonyms = self.setSynonyms(word)
         self.definition = self.setDefinition(word)
         self.shift = random.randint(1, 13)
@@ -102,8 +111,8 @@ class Game:
 
     def startGame(self):
         threading.Thread(target=self.gamePlay, daemon=True).start()
-        self.gameTimer(self)
-        self.done = True
+        self.gameTimer()
+        self.done = False
 
     def gameTimer(self):
         my_time = 60 
@@ -111,7 +120,7 @@ class Game:
             if self.done:
                 break
             seconds = x % 60
-            minutes = (x / 60)% 60
+            minutes = int (x / 60)% 60
             print(f"{minutes:02}:{seconds:02}")
             time.sleep(1)
 
