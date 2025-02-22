@@ -1,4 +1,3 @@
-# Import PyMultiDictionary
 from PyMultiDictionary import MultiDictionary
 import random
 
@@ -12,35 +11,35 @@ class game:
 
 # global return methods
     def getWord(self): 
-        print(f"This is the word {self.word}")
+        print(f"This is the word: {self.word}")
         return self.word
     def getDefinition(self): 
-        print(f"This is the definition {self.definition}")
+        print(f"This is the definition: {self.definition}")
         return self.definition
     def getSynonyms(self): 
         print(f"synonyms: {self.synonyms}")
         return self.synonyms
     def getCipherDefinition(self): 
-        print(f"cipher definition {self.cipherDefinition}")
+        print(f"cipher definition: {self.cipherDefinition}")
         return self.cipherDefinition
    
 # set the synonyms of a word
     def setSynonyms(self, word): 
-        synonyms = dictionary.synonym('en', word) 
-        return synonyms
+        self.synonyms = dictionary.synonym('en', word) 
+        return self.synonyms
     
  # set the definition of a word       
     def setDefinition(self, word):
         definition = dictionary.meaning('en', word)
         definition = definition[1]
-        self.definition = definition
+        return definition
 
 # set the cipher of a definition
     def setCipherDefinition(self, definition, shift):
         definition = str(definition)
         # definition = definition.replace(".|\\,", " ")
         print(definition)
-        listDef = definition.split(".|\\,|\\ ")
+        listDef = definition.split(".")
         alpha = "abcdefghijklmnopqrstuvwxyz"
         print(listDef)
 
@@ -56,9 +55,8 @@ class game:
                         if (alpha[l] == listDef[i][k]):
                            # shift the letter by the predefined shift 
                            cipheredWord += alpha[l - shift]
-                print(listDef[i])
                 listDef[i] = cipheredWord
-                print(listDef[i])
+                # print(listDef[i])
             # check synonyms
             for j in range(len(self.synonyms)) :
                 if listDef[i].lower() == self.synonyms[j].lower():
@@ -89,14 +87,10 @@ class game:
         self.shift = random.randint(1, 13)
         self.cipherDefinition = self.setCipherDefinition(self.definition, self.shift)
 
-        print("synonyms: " + self.synonyms)
-        print("definition: " + self.definition)
-        print("cipher definition: " + self.cipherDefinition)
 
+    # def startGame(self):
 
-    def startGame(self):
-
-        threading.Thread()
+        # threading.Thread(target=guess, daemon=Truee,start)
 
         
 
