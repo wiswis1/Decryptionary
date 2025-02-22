@@ -51,7 +51,6 @@ class Game:
         alpha = "abcdefghijklmnopqrstuvwxyz"
         print(listDef)
 
-        # loopin' time baby
         for i in range(len(listDef)) :
             # checkin' for periods and commas
             hasPeriod = False
@@ -69,10 +68,12 @@ class Game:
                    # for all letters in the alphabet
                    for l in range(len(alpha)):
                        # if the current letter matches this letter of the alphabet   
-                        if (alpha[l] == listDef[i][k].lower):
+                        if (alpha[l].lower() == listDef[i][k].lower()):
                            # shift the letter by the predefined shift 
                            cipheredWord += alpha[l - shift]
+                print(listDef[i])
                 listDef[i] = cipheredWord
+                print(listDef[i])
             # check synonyms
             for j in range(len(self.synonyms)) :
                 if listDef[i].lower() == self.synonyms[j].lower():

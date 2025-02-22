@@ -1,25 +1,59 @@
 import tkinter as tk
+from tkinter import messagebox
 import game 
 import random
+# import customtkinter
 
 word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music', 'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor']
 word = game.Game('Code')
 
 printText = word.getCipherDefinition()
 
+import tkinter as tk
+
+def center_window(root, width=400, height=300):
+    # Get the screen width and height
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    # Calculate position x and y
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+
+    # Set the geometry of the window
+    root.geometry(f"{width}x{height}+{x}+{y}")
+
+
+
+
+
+
+
+
 # Function to update the countdown timer
-def updateScore(time_left):
+def updateTime(time_left):
     if time_left > 0:
         time_label.config(text=f"Time Left: {time_left}s")
-        root.after(1000, updateScore, time_left - 1)  # Call itself after 1 sec
+        root.after(1000, updateTime, time_left - 1)  # Call itself after 1 sec
     elif (time_left == 0):
-        win = tk.Tk()    
-        win.geometry("250x250")
-        win.Label(win,text = 'GAME OVER').pack
+        
+        # end_game_mess = tk.Toplevel(end_game_mess)  # Create a new window
+        # game_over_window.overrideredirect(True)
+        # game_over_window.attributes("-topmost", True)
+        # game_over_window.resizable(False, False)
+        # game_over_window.title("Game Over")
+        # tk.Label(game_over_window, text="Game Over", font=("Arial", 16)).pack(pady=10)
+        # #game_over_window.transient(root) #tried this to stop overlay from moving(didn't work)
+        # game_over_window.grab_set()
+        end_game_mess = tk.Label(root, text = "Game over", font = ("Arial", 35))
+        end_game_mess.place(x=(width - mess_width) // 2, y=(height - mess_height) // 2, width=mess_width, height=mess_height)
+        # end_game_mess.place(x=, y = , height = , width = 300)
+        root.after(5000, root.quit)  # Clo
+        
     else:
         time_label.config(text="Game Over")  # Display game over message
-        game.time.sleep(5)
-        root.destroy()
+        
+        # root.destroy()
 
 def check_answer():
     """Checks the entered answer and provides feedback."""
@@ -42,7 +76,7 @@ def show_hint():
 root = tk.Tk()
 root.geometry("1100x500")
 root.title("Word Puzzle")
-
+center_window(root, 1100, 500)
 # Difficulty and time label
 difficulty_label = tk.Label(root, text="Difficulty: easy")
 difficulty_label.grid(row=0, column=0, sticky="w")
@@ -88,6 +122,6 @@ hint_label = tk.Label(hint_frame, text="")
 hint_label.pack()
 
 # Start the countdown timer (e.g., 10 seconds)
-updateScore(10)
+updateTime(5)
 
 root.mainloop()
