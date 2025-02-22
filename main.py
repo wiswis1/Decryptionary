@@ -1,6 +1,7 @@
 from tkinter import messagebox
 from tkinter import *
 import customtkinter as ctk
+from game import*
 import game 
 import random
 
@@ -8,7 +9,18 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 word_List = ['Code', 'Hack', 'Bug', 'Money', 'University', 'Guess', 'Time', 'Grass', 'Bless', 'Game', 'Pressure', 'Music', 'Bolt', 'Snow', 'Show', 'Canada', 'Student', 'Professor']
-word = game.Game("Money","Hard")
+
+
+def getRandWord(): 
+    # print(f"This is the random word: {self.word_List}\n")
+    return random.choice(word_List)
+
+randWord = getRandWord()
+print(randWord)
+word = Game(randWord, "Hard")
+
+
+
 
 def center_window(root, width=400, height=300):
     # Get the screen width and height
@@ -24,12 +36,11 @@ def center_window(root, width=400, height=300):
 
     def disable_movement():
         root.geometry(f"{width}x{height}+{x}+{y}")
-    root.bind("<Configure>", lambda event: disable_movement())
 
 
 # Function to update the countdown timer
 def updateTime(time_left):
-    if time_left >= 0:
+    if time_left > 0:
         time_label.configure(text=f"Time Left: {time_left}s")
         root.after(1000, updateTime, time_left - 1)  # Call itself after 1 sec
     else:
@@ -37,6 +48,8 @@ def updateTime(time_left):
         game_over_window.title("Game Over")
         game_over_window.overrideredirect(True)
         game_over_window.attributes("-topmost", True)
+        game_over_window.lift()
+        game_over_window.focus_force()
         game_over_window.resizable(False, False)
 
 
@@ -48,11 +61,15 @@ def updateTime(time_left):
         game_over_label = ctk.CTkLabel(game_over_window, text="Game Over", font=("Arial", 16), text_color="red")
         game_over_label.pack(expand=True, pady=20)
             
+        def restart_game():
+            game.Game("Hack", "Hard")
+            game_over_window.destroy()
+            print("Game restarted!")
 
-        try_again_button = ctk.CTkButton(game_over_window, text="Try again", command=game.Game("Hack"))
+        try_again_button = ctk.CTkButton(game_over_window, text="Try again", command=restart_game)
         try_again_button.pack(pady=10)
         
-        quit_button =ctk.CTkButton(game_over_window, text = "Close", command=root.destroy)
+        quit_button =ctk.CTkButton(game_over_window, text = "Close", command=root.quit)
         quit_button.pack(pady=10)
 
         game_over_window.grab_set()
@@ -69,9 +86,9 @@ def check_answer():
     """Checks the entered answer and provides feedback."""
     answer = entry.get().lower()
     if answer == word.getWord():  
-        result_label.config(text="Correct!")
+        result_label.configure(text="Correct!")
     else:
-        result_label.config(text="Incorrect. Try again.")
+        result_label.configure(text="Incorrect. Try again.")
 
 def shortcut(event):
     if event.keysym == "Return":
@@ -82,6 +99,8 @@ def show_hint():
     synonyms = word.getSynonyms()
     if synonyms:  # Ensure there are synonyms available
         return random.choice(synonyms)  
+
+        
 
 # Create the main window
 root = ctk.CTk()
@@ -96,10 +115,15 @@ time_label = ctk.CTkLabel(root, text="Time Left: 10s")  # Timer label
 time_label.grid(row=0, column=2, sticky="e")
 
 # Puzzle text
+definitionText = word.getDefinition()
 printText = word.getCipherDefinition()
 puzzle_text = printText
 puzzle_label = ctk.CTkLabel(root, text=puzzle_text, font=("Arial", 14), wraplength=1100, justify="center", anchor="center")
 puzzle_label.grid(row=1, column=0, columnspan=3, pady=20)
+# for i in range(len(printText)):
+    # if printText[i] != definitionText[i]  
+        # puzzle_label.configure(fg="green")
+    
 
 
 
@@ -139,4 +163,20 @@ hint_label.pack()
 # Start the countdown timer (e.g., 10 seconds)
 updateTime(5)
 
-root.mainloop()
+# Closing confirmation
+root.protocol("WM_DETELE_WINDOW")
+
+def on_closing():
+    if messagebox.askyesno(title = 'Quit??', message = 'Do you really want to quit?'):
+        root.destroy()
+
+# Menu bar to choose difficulty
+options = ['Easy','Medium','Hard']
+# menubar = ctk.CTkOptionMenu(root)
+# diffMenu = ctk.CTkOptionMenu(menubar)
+# diffMenu._command(label = "Easy", command = word.diff("Easy"))
+# diffMenu._command(label = "Medium", command = word.diff("Medium"))
+# diffMenu._command(label = "Hard", command = word.diff("Hard"))
+# menubar.add_cascade(menu = diffMenu, label = "Difficulty")
+
+root.mainloop() 

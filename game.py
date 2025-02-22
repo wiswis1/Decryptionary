@@ -1,7 +1,6 @@
 from PyMultiDictionary import MultiDictionary, DICT_SYNONYMCOM
 import random
 
-
 # main game class !
 class Game:
 
@@ -9,8 +8,11 @@ class Game:
     dictionary = MultiDictionary()
     dictionary.set_words_lang('en')
 
+    
 
     # global return methods
+
+
     def getWord(self): 
         # print(f"This is the word: {self.word}\n")
         return self.word
@@ -24,7 +26,7 @@ class Game:
         # print(f"cipher definition: {self.cipherDefinition}\n")
         return self.cipherDefinition
     def getGuessNum(self):
-        return self.guessNum
+        return self.guess
    
     # set the synonyms of a word
     def setSynonyms(self, word): 
@@ -37,23 +39,21 @@ class Game:
         definition = definition[1]
         return definition
     
-    def setGuesses(self,level):
+    def setDiff(self,level):
         if level == 'Easy':
-            guesses = 8
+            self.guess = 8
         elif level == "Medium":
-            guesses = 5
+            self.guess = 5
         else:
-            guesses = 3
-        return guesses
+            self.guess = 3
+        return level
     
 # set the cipher of a definition
     def setCipherDefinition(self, definition, shift):
 
         definition = str(definition)
-        print(definition)
         listDef = definition.split()
         alpha = "abcdefghijklmnopqrstuvwxyz"
-        print(listDef)
 
         for i in range(len(listDef)) :
             # checkin' for periods and commas
@@ -108,7 +108,9 @@ class Game:
         self.definition = self.setDefinition(word)
         self.shift = random.randint(1, 13)
         self.cipherDefinition = self.setCipherDefinition(self.definition, self.shift)
-        self.guessNum = self.setGuesses(level)
+        self.guess = 0
+        self.diff = self.setDiff(level)
+        
 
     # def startGame(self):
     #     threading.Thread(target=self.gamePlay, daemon=True).start()
@@ -128,9 +130,9 @@ class Game:
     # def gamePlay(self):
     #     playing = True
     #     while(playing):
-    #         self.guessNum = 10
+    #         self.guessNum
     #         print("Welcome to Decryptionary!")
-    #         while (guesses < 10 and not self.done):
+    #         while (guesses < self.guessNum and not self.done):
     #             ans = str(input("Enter your guess: "))
     #             if (self.word.lower() == ans.lower()):
     #                     flag = True
